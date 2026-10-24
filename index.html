@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patinha Laranja Pet Shop — loja virtual demonstrativa</title>
+<meta name="description" content="Loja virtual fictícia de pet shop, criada para demonstração e prática de testes manuais.">
+<style>
+/* ==========================================================================
+   TOKENS
+   ========================================================================== */
+:root {
+  --bg: #141519;
+  --bg-soft: #1a1c21;
+  --panel: #1f2127;
+  --panel-2: #282b33;
+  --line: #3a3e4a;
+  --text: #f4f3f0;
+  --muted: #b6bac5;
+  --accent: #ff7a1a;
+  --accent-strong: #ff9440;
+  --accent-ink: #1c0f02;
+  --ok: #4ade80;
+  --warn: #fbbf24;
+  --err: #ff8080;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --font: "Trebuchet MS", "Segoe UI", "Helvetica Neue", system-ui, -apple-system, sans-serif;
+  --font-display: "Avenir Next Rounded", "Arial Rounded MT Bold", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.2; margin: 0 0 .5em; }
+h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.1rem; }
+p { margin: 0 0 .75em; }
+a { color: var(--accent-strong); }
+button, input, select { font: inherit; color: inherit; }
+img, svg { max-width: 100%; }
+:focus-visible { outline: 3px solid #ffffff; outline-offset: 2px; box-shadow: 0 0 0 5px var(--accent); }
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip-link { position: absolute; left: 8px; top: -60px; background: var(--accent); color: var(--accent-ink); padding: 10px 14px; border-radius: 8px; z-index: 100; font-weight: 700; }
+.skip-link:focus { top: 8px; }
+.muted { color: var(--muted); }
+.container { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+
+/* ==========================================================================
+   HEADER / NAV
+   ========================================================================== */
+.site-header { background: var(--bg-soft); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; }
+.header-row { display: flex; align-items: center; gap: 16px; padding: 12px 0; flex-wrap: wrap; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; }
+.logo-mark { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; font-size: 1.35rem; }
+.logo small { display: block; font-size: .7rem; font-weight: 500; color: var(--muted); letter-spacing: .02em; }
+.search { flex: 1 1 260px; display: flex; min-width: 0; }
+.search input { flex: 1; min-width: 0; padding: 11px 14px; background: var(--panel); border: 1px solid var(--line); border-right: 0; border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+.search button { padding: 0 16px; background: var(--accent); color: var(--accent-ink); border: 0; font-weight: 700; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; cursor: pointer; }
+.header-links { display: flex; gap: 8px; align-items: center; }
+.pill-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); color: var(--text); text-decoration: none; min-height: 44px; }
+.pill-link:hover { border-color: var(--accent); }
+.badge { background: var(--accent); color: var(--accent-ink); min-width: 24px; height: 24px; padding: 0 7px; border-radius: 999px; display: inline-grid; place-items: center; font-weight: 800; font-size: .85rem; }
+.cat-nav { border-top: 1px solid var(--line); background: var(--bg); }
+.cat-list { display: flex; gap: 8px; padding: 10px 0; overflow-x: auto; list-style: none; margin: 0; scrollbar-width: thin; }
+.chip { white-space: nowrap; background: var(--panel); border: 1px solid var(--line); color: var(--text); padding: 9px 15px; border-radius: 999px; cursor: pointer; min-height: 40px; }
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
+
+/* ==========================================================================
+   LAYOUT / COMMON COMPONENTS
+   ========================================================================== */
+main { flex: 1; padding: 24px 0 56px; }
+main:focus { outline: none; }
+.banner { padding: 12px 16px; border-radius: var(--radius-sm); margin-bottom: 16px; border: 1px solid; }
+.banner.warn { background: #3a2f10; border-color: var(--warn); color: #ffe9a8; }
+.banner.ok { background: #12351f; border-color: var(--ok); color: #c6f6d8; }
+.banner.err { background: #3d1a1a; border-color: var(--err); color: #ffd1d1; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 18px; min-height: 44px; border-radius: var(--radius-sm); border: 1px solid var(--line); background: var(--panel-2); color: var(--text); cursor: pointer; text-decoration: none; font-weight: 600; }
+.btn:hover:not(:disabled) { border-color: var(--accent); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 800; }
+.btn-primary:hover:not(:disabled) { background: var(--accent-strong); border-color: var(--accent-strong); }
+.btn-danger { border-color: var(--err); color: var(--err); background: transparent; }
+.btn-ghost { background: transparent; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-block { width: 100%; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+.page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+.page-head h1 { margin: 0; }
+.back-link { display: inline-block; margin-bottom: 14px; }
+.empty { text-align: center; padding: 48px 20px; }
+.empty .big { font-size: 3rem; display: block; margin-bottom: 8px; }
+.tag { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; border: 1px solid var(--line); background: var(--panel-2); }
+.tag.ok { color: var(--ok); border-color: #2f7a4b; }
+.tag.warn { color: var(--warn); border-color: #8a6a14; }
+.tag.err { color: var(--err); border-color: #8a3a3a; }
+.tag.offer { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+/* ==========================================================================
+   HERO / HIGHLIGHTS
+   ========================================================================== */
+.hero { background: linear-gradient(120deg, #2a1c10 0%, var(--panel) 62%); border: 1px solid #5a3718; border-radius: 20px; padding: clamp(22px, 4vw, 40px); margin-bottom: 28px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; }
+.hero h1 { max-width: 20ch; }
+.hero p { color: var(--muted); max-width: 52ch; }
+.hero-paws { font-size: clamp(3.5rem, 10vw, 6.5rem); line-height: 1; filter: saturate(.9); }
+.section-title { margin: 28px 0 14px; }
+.offers { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 8px; }
+
+/* ==========================================================================
+   FILTERS
+   ========================================================================== */
+.filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; align-items: end; margin-bottom: 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label, .field .label { font-weight: 600; font-size: .92rem; }
+.field input, .field select { padding: 11px 12px; background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius-sm); min-height: 44px; width: 100%; }
+.field input[aria-invalid="true"], .field select[aria-invalid="true"] { border-color: var(--err); }
+.field-error { color: var(--err); font-size: .88rem; margin: 0; min-height: 0; }
+.hint { color: var(--muted); font-size: .85rem; margin: 0; }
+.result-count { color: var(--muted); margin: 8px 0 14px; }
+
+/* ==========================================================================
+   PRODUCT GRID / CARD
+   ========================================================================== */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+.card.unavailable .visual { filter: grayscale(.85) brightness(.75); }
+.visual { aspect-ratio: 4 / 3; display: grid; place-items: center; background: linear-gradient(135deg, hsl(var(--h, 25) 38% 26%), hsl(var(--h, 25) 42% 14%)); position: relative; }
+.visual .emoji { font-size: 4rem; line-height: 1; }
+.visual .corner { position: absolute; top: 10px; left: 10px; }
+.card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.card-cat { color: var(--muted); font-size: .85rem; }
+.card-title { font-size: 1.02rem; margin: 0; }
+.card-title a { color: var(--text); text-decoration: none; }
+.card-title a:hover { text-decoration: underline; text-decoration-color: var(--accent); }
+.price { font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; }
+.price-old { color: var(--muted); text-decoration: line-through; font-size: .9rem; margin-left: 8px; font-weight: 400; }
+.card-actions { margin-top: auto; display: grid; grid-template-columns: 1fr; gap: 8px; padding-top: 10px; }
+.skeleton { background: linear-gradient(90deg, var(--panel) 25%, var(--panel-2) 50%, var(--panel) 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite linear; border-radius: var(--radius); min-height: 320px; border: 1px solid var(--line); }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* ==========================================================================
+   PRODUCT DETAIL
+   ========================================================================== */
+.detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+.detail .visual { border-radius: var(--radius); aspect-ratio: 1 / 1; }
+.detail .visual .emoji { font-size: 8rem; }
+.detail-info .price { font-size: 2rem; }
+.buy-box { margin-top: 18px; display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+
+/* ==========================================================================
+   QUANTITY STEPPER
+   ========================================================================== */
+.stepper { display: inline-flex; align-items: stretch; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-soft); }
+.stepper button { width: 44px; min-height: 44px; background: var(--panel-2); border: 0; cursor: pointer; font-size: 1.25rem; }
+.stepper button:disabled { opacity: .4; cursor: not-allowed; }
+.stepper input { width: 64px; text-align: center; border: 0; background: transparent; min-height: 44px; -moz-appearance: textfield; }
+.stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* ==========================================================================
+   CART
+   ========================================================================== */
+.cart-layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 22px; align-items: start; }
+.cart-lines { display: flex; flex-direction: column; gap: 12px; }
+.cart-line { display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 14px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; }
+.cart-line .visual { width: 84px; aspect-ratio: 1; border-radius: 10px; }
+.cart-line .visual .emoji { font-size: 2.2rem; }
+.cart-line h3 { margin: 0 0 4px; font-size: 1rem; }
+.line-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; }
+.line-total { text-align: right; font-weight: 800; font-family: var(--font-display); }
+.summary { position: sticky; top: 150px; }
+.summary dl { margin: 0; }
+.summary .row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.summary .row dt { color: var(--muted); }
+.summary .row dd { margin: 0; font-weight: 700; }
+.summary .row.total { border-bottom: 0; font-size: 1.25rem; padding-top: 14px; }
+.summary .row.total dt { color: var(--text); font-weight: 700; }
+.summary .row.total dd { color: var(--accent-strong); font-family: var(--font-display); font-weight: 800; }
+.ship-form { display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
+.ship-form .field { flex: 1 1 150px; }
+.ship-result { margin-top: 10px; padding: 10px 12px; background: var(--bg-soft); border-radius: var(--radius-sm); border: 1px solid var(--line); font-size: .92rem; }
+.stack > * + * { margin-top: 14px; }
+
+/* ==========================================================================
+   CHECKOUT
+   ========================================================================== */
+.steps { display: flex; gap: 8px; list-style: none; padding: 0; margin: 0 0 20px; flex-wrap: wrap; }
+.steps li { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); }
+.steps li .n { width: 24px; height: 24px; border-radius: 50%; background: var(--panel-2); display: grid; place-items: center; font-size: .85rem; font-weight: 700; }
+.steps li[aria-current="step"] { border-color: var(--accent); color: var(--text); }
+.steps li[aria-current="step"] .n { background: var(--accent); color: var(--accent-ink); }
+.steps li.done .n { background: var(--ok); color: #0b2a16; }
+.form-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.form-grid .span-6 { grid-column: span 6; }
+.form-grid .span-4 { grid-column: span 4; }
+.form-grid .span-3 { grid-column: span 3; }
+.form-grid .span-2 { grid-column: span 2; }
+.radio-card { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--bg-soft); cursor: pointer; }
+.radio-card:has(input:checked) { border-color: var(--accent); background: #2b2118; }
+.radio-card input { margin-top: 5px; accent-color: var(--accent); width: 18px; height: 18px; }
+.form-actions { display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap; margin-top: 22px; }
+.review-list { list-style: none; margin: 0; padding: 0; }
+.review-list li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.kv { display: grid; grid-template-columns: 140px 1fr; gap: 6px 14px; margin: 0; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; }
+
+/* ==========================================================================
+   ORDERS
+   ========================================================================== */
+.order-list { display: flex; flex-direction: column; gap: 12px; }
+.order-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+.order-id { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; font-size: .9rem; }
+td.num, th.num { text-align: right; }
+
+/* ==========================================================================
+   FOOTER / TOAST / DIALOG
+   ========================================================================== */
+.site-footer { border-top: 1px solid var(--line); background: var(--bg-soft); padding: 22px 0; color: var(--muted); font-size: .9rem; }
+.footer-row { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: center; }
+.toasts { position: fixed; right: 16px; bottom: 16px; z-index: 60; display: flex; flex-direction: column; gap: 10px; max-width: min(420px, calc(100vw - 32px)); }
+.toast { padding: 12px 16px; border-radius: var(--radius-sm); background: var(--panel-2); border: 1px solid var(--line); border-left-width: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.45); animation: pop .18s ease-out; }
+.toast.ok { border-left-color: var(--ok); }
+.toast.warn { border-left-color: var(--warn); }
+.toast.err { border-left-color: var(--err); }
+@keyframes pop { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+dialog { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; max-width: 440px; width: calc(100vw - 32px); }
+dialog::backdrop { background: rgba(0,0,0,.65); }
+dialog .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 960px) {
+  .cart-layout { grid-template-columns: 1fr; }
+  .summary { position: static; }
+  .detail { grid-template-columns: 1fr; }
+  .detail .visual { aspect-ratio: 16 / 10; }
+}
+@media (max-width: 640px) {
+  .container { padding: 0 14px; }
+  .header-row { gap: 10px; }
+  .search { order: 3; flex-basis: 100%; }
+  .header-links { margin-left: auto; }
+  .pill-link .txt { display: none; }
+  .hero { grid-template-columns: 1fr; }
+  .hero-paws { display: none; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+  .visual .emoji { font-size: 3rem; }
+  .card-body { padding: 10px 12px 12px; }
+  .cart-line { grid-template-columns: 64px minmax(0, 1fr); }
+  .cart-line .visual { width: 64px; }
+  .cart-line .line-total { grid-column: 1 / -1; text-align: left; }
+  .form-grid .span-3, .form-grid .span-4, .form-grid .span-2 { grid-column: span 6; }
+  .form-actions .btn { flex: 1 1 100%; }
+  .kv { grid-template-columns: 1fr; }
+  .toasts { left: 16px; right: 16px; max-width: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .skeleton, .toast { animation: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+<header class="site-header">
+  <div class="container">
+    <div class="header-row">
+      <a class="logo" href="#/" aria-label="Patinha Laranja Pet Shop — página inicial">
+        <span class="logo-mark" aria-hidden="true">🐾</span>
+        <span>Patinha Laranja<small>Pet shop demonstrativo</small></span>
+      </a>
+      <form class="search" role="search" id="search-form">
+        <label for="search-input" class="sr-only">Pesquisar produtos pelo nome</label>
+        <input id="search-input" type="search" placeholder="Pesquisar produtos…" autocomplete="off">
+        <button type="submit">Buscar</button>
+      </form>
+      <nav class="header-links" aria-label="Atalhos da conta">
+        <a class="pill-link" href="#/pedidos"><span aria-hidden="true">📦</span><span class="txt">Meus pedidos</span><span class="sr-only">Meus pedidos</span></a>
+        <a class="pill-link" href="#/carrinho" id="cart-link"><span aria-hidden="true">🛒</span><span class="txt">Carrinho</span><span class="badge" id="cart-badge">0</span></a>
+      </nav>
+    </div>
+  </div>
+  <nav class="cat-nav" aria-label="Categorias">
+    <div class="container"><ul class="cat-list" id="cat-list"></ul></div>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="container" id="app">
+    <noscript><p class="banner err">Esta loja precisa de JavaScript para funcionar. Ative-o no navegador e recarregue a página.</p></noscript>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-row">
+    <p style="margin:0">Projeto demonstrativo: produtos, preços, frete e pedidos são fictícios. Nenhuma cobrança ou entrega real é realizada.</p>
+    <button class="btn btn-ghost" type="button" id="reset-demo">Reiniciar dados da demonstração</button>
+  </div>
+</footer>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<dialog id="dlg" aria-labelledby="dlg-title" aria-describedby="dlg-msg">
+  <h2 id="dlg-title"></h2>
+  <p id="dlg-msg" class="muted"></p>
+  <div class="actions">
+    <button type="button" class="btn" id="dlg-cancel">Cancelar</button>
+    <button type="button" class="btn btn-danger" id="dlg-ok">Confirmar</button>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+
+/* ==========================================================================
+   1. DADOS E CATÁLOGO (valores monetários em centavos)
+   ========================================================================== */
+const STORE_NAME = "Patinha Laranja Pet Shop";
+const FREE_SHIPPING_FROM = 25000; // R$ 250,00
+const CATEGORIES = ["Cães", "Gatos", "Aves", "Peixes", "Higiene e saúde", "Acessórios"];
+const UFS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
+
+const PRODUCTS = [
+  { id: "p01", name: "Ração Premium para Cães Adultos 10,1 kg", category: "Cães", price: 18990, oldPrice: 21990, stock: 12, emoji: "🐕", hue: 28, description: "Ração seca premium com frango e arroz, formulada para cães adultos de porte médio e grande. Ajuda na saúde da pelagem e na digestão. Pacote de 10,1 kg." },
+  { id: "p02", name: "Ração para Filhotes de Raças Pequenas 3 kg", category: "Cães", price: 8490, stock: 20, emoji: "🐶", hue: 40, description: "Grãos pequenos, fáceis de mastigar, com DHA para o desenvolvimento de filhotes de raças pequenas até 12 meses. Pacote de 3 kg." },
+  { id: "p03", name: "Petisco Bifinhos de Frango 500 g", category: "Cães", price: 2590, stock: 40, emoji: "🦴", hue: 18, description: "Bifinhos macios sabor frango, ótimos para recompensar e treinar. Sem corantes artificiais. Embalagem de 500 g." },
+  { id: "p04", name: "Bolinha de Borracha Maciça Resistente", category: "Cães", price: 1990, stock: 30, emoji: "🎾", hue: 95, description: "Brinquedo de borracha atóxica, quica bastante e resiste a mordidas fortes. Diâmetro de 6 cm." },
+  { id: "p05", name: "Ração para Gatos Castrados Sabor Salmão 3 kg", category: "Gatos", price: 12990, oldPrice: 14990, stock: 15, emoji: "🐱", hue: 210, description: "Controle de peso e cuidado com o trato urinário. Receita com salmão para gatos adultos castrados. Pacote de 3 kg." },
+  { id: "p06", name: "Areia Higiênica de Sílica 3,8 kg", category: "Gatos", price: 3990, stock: 25, emoji: "🪣", hue: 190, description: "Alta absorção, controla odores e dura mais que a areia tradicional. Pacote de 3,8 kg." },
+  { id: "p07", name: "Arranhador Torre com Sisal", category: "Gatos", price: 15990, stock: 5, emoji: "🐾", hue: 330, description: "Torre com 3 níveis, base estável e revestimento de sisal natural. Altura de 90 cm." },
+  { id: "p08", name: "Sachê para Gatos Filhotes — Caixa com 12", category: "Gatos", price: 4790, stock: 0, emoji: "🥫", hue: 260, description: "Alimento úmido em sachês de 85 g, sabor carne ao molho, para gatos filhotes. Caixa com 12 unidades." },
+  { id: "p09", name: "Ração Mix de Sementes para Aves 1 kg", category: "Aves", price: 2290, stock: 18, emoji: "🌾", hue: 55, description: "Mistura de painço, alpiste e aveia para calopsitas, periquitos e outras aves pequenas. Pacote de 1 kg." },
+  { id: "p10", name: "Gaiola Pequena para Pássaros", category: "Aves", price: 14990, stock: 4, emoji: "🐦", hue: 160, description: "Gaiola de metal com bandeja removível, 2 poleiros e comedouros. Medidas: 40 × 30 × 50 cm." },
+  { id: "p11", name: "Ração em Flocos para Peixes Tropicais 50 g", category: "Peixes", price: 1490, stock: 35, emoji: "🐠", hue: 200, description: "Flocos nutritivos que realçam a cor dos peixes ornamentais tropicais de água doce. Pote de 50 g." },
+  { id: "p12", name: "Aquário Kit Completo 20 L com Filtro", category: "Peixes", price: 24990, oldPrice: 28990, stock: 3, emoji: "🐡", hue: 220, description: "Kit com aquário de vidro 20 litros, filtro interno, iluminação LED e tampa. Fácil de montar." },
+  { id: "p13", name: "Shampoo Neutro para Cães e Gatos 500 ml", category: "Higiene e saúde", price: 3490, stock: 22, emoji: "🧴", hue: 280, description: "Fórmula neutra e hipoalergênica, limpa sem ressecar a pele e deixa a pelagem macia. Frasco de 500 ml." },
+  { id: "p14", name: "Antipulgas para Cães de 10 a 25 kg", category: "Higiene e saúde", price: 8990, stock: 10, emoji: "💊", hue: 140, description: "Comprimido mastigável com ação contra pulgas por 30 dias. Consulte um veterinário antes de usar. Produto fictício para demonstração." },
+  { id: "p15", name: "Coleira Peitoral Ajustável Tamanho M", category: "Acessórios", price: 5990, stock: 14, emoji: "🦮", hue: 10, description: "Peitoral acolchoado com fivela de liberação rápida e fitas refletivas. Para cães de 8 a 18 kg." },
+  { id: "p16", name: "Caminha Pet Macia Tamanho G", category: "Acessórios", price: 17990, oldPrice: 19990, stock: 7, emoji: "🛏️", hue: 345, description: "Cama com enchimento antialérgico e capa removível lavável. Medidas: 80 × 60 cm." }
+];
+
+const PRICE_RANGES = [
+  { id: "all", label: "Todos os preços", min: 0, max: Infinity },
+  { id: "r1", label: "Até R$ 50,00", min: 0, max: 5000 },
+  { id: "r2", label: "R$ 50,01 a R$ 100,00", min: 5001, max: 10000 },
+  { id: "r3", label: "R$ 100,01 a R$ 200,00", min: 10001, max: 20000 },
+  { id: "r4", label: "Acima de R$ 200,00", min: 20001, max: Infinity }
+];
+const SORT_OPTIONS = [
+  { id: "name", label: "Nome (A–Z)" },
+  { id: "price-asc", label: "Menor preço" },
+  { id: "price-desc", label: "Maior preço" }
+];
+const PAYMENTS = [
+  { id: "pix", label: "Pix (simulado)", help: "Nenhum código Pix real é gerado." },
+  { id: "boleto", label: "Boleto bancário (simulado)", help: "Nenhum boleto real é emitido." },
+  { id: "cartao", label: "Cartão de crédito (simulado)", help: "Nenhum dado de cartão é solicitado ou armazenado." }
+];
+const KEYS = { cart: "patinha.cart.v1", stock: "patinha.stock.v1", orders: "patinha.orders.v1", prefs: "patinha.prefs.v1" };
+
+/* ==========================================================================
+   2. ESTADO DA APLICAÇÃO
+   ========================================================================== */
+const state = {
+  stock: {},            // id -> quantidade disponível
+  cart: [],             // [{ id, qty }]
+  orders: [],
+  cep: "",              // CEP (8 dígitos) já calculado
+  query: "",
+  category: "all",
+  price: "all",
+  sort: "name",
+  loading: true,
+  placing: false,
+  justPlacedId: null,
+  checkout: null,       // { step, token, data, payment, errors }
+  storageWarned: false
+};
+
+/* ==========================================================================
+   3. UTILITÁRIOS
+   ========================================================================== */
+const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+const formatMoney = cents => brl.format(cents / 100);
+const normalize = s => String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+const getProduct = id => PRODUCTS.find(p => p.id === id) || null;
+const isPlainObject = v => v !== null && typeof v === "object" && !Array.isArray(v);
+const isPositiveInt = v => Number.isInteger(v) && v > 0;
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) {
+    for (const [k, v] of Object.entries(props)) {
+      if (v === null || v === undefined || v === false) continue;
+      if (k === "class") el.className = v;
+      else if (k === "text") el.textContent = v;
+      else if (k.startsWith("on") && typeof v === "function") el.addEventListener(k.slice(2), v);
+      else if (v === true) el.setAttribute(k, "");
+      else el.setAttribute(k, String(v));
+    }
+  }
+  for (const kid of kids.flat()) {
+    if (kid === null || kid === undefined || kid === false) continue;
+    el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  }
+  return el;
+}
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  return isNaN(d.getTime()) ? "Data indisponível" : d.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+}
+function formatCep(digits) { return digits.slice(0, 5) + "-" + digits.slice(5); }
+function newToken() {
+  if (window.crypto && typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  return "t" + Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+function newOrderId() {
+  const d = new Date();
+  const stamp = d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
+  let id;
+  do { id = "PL-" + stamp + "-" + Math.random().toString(36).slice(2, 6).toUpperCase(); }
+  while (state.orders.some(o => o.id === id));
+  return id;
+}
+
+/* ==========================================================================
+   4. MENSAGENS (toast, confirmação)
+   ========================================================================== */
+function toast(message, type) {
+  const box = document.getElementById("toasts");
+  const el = h("div", { class: "toast " + (type || "ok"), role: type === "err" ? "alert" : "status", text: message });
+  box.append(el);
+  setTimeout(() => el.remove(), type === "err" ? 6500 : 4000);
+}
+
+function confirmDialog(title, message, confirmLabel) {
+  return new Promise(resolve => {
+    const dlg = document.getElementById("dlg");
+    if (typeof dlg.showModal !== "function") { resolve(window.confirm(title + "\n" + message)); return; }
+    document.getElementById("dlg-title").textContent = title;
+    document.getElementById("dlg-msg").textContent = message;
+    const ok = document.getElementById("dlg-ok");
+    const cancel = document.getElementById("dlg-cancel");
+    ok.textContent = confirmLabel || "Confirmar";
+    const finish = result => { cleanup(); dlg.close(); resolve(result); };
+    const onOk = () => finish(true);
+    const onCancel = () => finish(false);
+    const onEsc = e => { e.preventDefault(); finish(false); };
+    function cleanup() {
+      ok.removeEventListener("click", onOk);
+      cancel.removeEventListener("click", onCancel);
+      dlg.removeEventListener("cancel", onEsc);
+    }
+    ok.addEventListener("click", onOk);
+    cancel.addEventListener("click", onCancel);
+    dlg.addEventListener("cancel", onEsc);
+    dlg.showModal();
+    cancel.focus();
+  });
+}
+
+/* ==========================================================================
+   5. PERSISTÊNCIA (localStorage com tratamento de erros e dados não confiáveis)
+   ========================================================================== */
+const Store = (() => {
+  let usable = true;
+  const memory = {};
+  try {
+    const k = "__patinha_test__";
+    localStorage.setItem(k, "1");
+    localStorage.removeItem(k);
+  } catch (e) { usable = false; }
+  return {
+    available: () => usable,
+    read(key) {
+      try {
+        const raw = usable ? localStorage.getItem(key) : memory[key];
+        return raw === null || raw === undefined ? null : JSON.parse(raw);
+      } catch (e) { return null; }
+    },
+    write(key, value) {
+      let text;
+      try { text = JSON.stringify(value); } catch (e) { return false; }
+      if (!usable) { memory[key] = text; return false; }
+      try { localStorage.setItem(key, text); return true; }
+      catch (e) { usable = false; memory[key] = text; return false; }
+    },
+    remove(key) {
+      try { if (usable) localStorage.removeItem(key); } catch (e) { /* ignorado */ }
+      delete memory[key];
+    }
+  };
+})();
+
+function persist(key, value) {
+  const ok = Store.write(key, value);
+  if (!ok && !state.storageWarned) {
+    state.storageWarned = true;
+    toast("O armazenamento do navegador está indisponível. Seus dados valem só enquanto esta página estiver aberta.", "warn");
+  }
+}
+const saveCart = () => persist(KEYS.cart, state.cart);
+const saveStock = () => persist(KEYS.stock, state.stock);
+const saveOrders = () => persist(KEYS.orders, state.orders);
+const savePrefs = () => persist(KEYS.prefs, { cep: state.cep, sort: state.sort });
+
+function loadStock() {
+  const saved = Store.read(KEYS.stock);
+  const result = {};
+  for (const p of PRODUCTS) {
+    const v = isPlainObject(saved) ? saved[p.id] : undefined;
+    result[p.id] = Number.isInteger(v) && v >= 0 && v <= p.stock ? v : p.stock;
+  }
+  return result;
+}
+
+function sanitizeCart(list) {
+  const merged = new Map();
+  if (Array.isArray(list)) {
+    for (const item of list) {
+      if (!isPlainObject(item) || typeof item.id !== "string" || !isPositiveInt(item.qty)) continue;
+      if (!getProduct(item.id)) continue;
+      merged.set(item.id, (merged.get(item.id) || 0) + item.qty);
+    }
+  }
+  const clean = [];
+  for (const [id, qty] of merged) {
+    const max = state.stock[id] || 0;
+    if (max < 1) continue;
+    clean.push({ id, qty: Math.min(qty, max) });
+  }
+  return clean;
+}
+
+function isValidOrder(o) {
+  return isPlainObject(o) && typeof o.id === "string" && typeof o.token === "string" && typeof o.createdAt === "string"
+    && Array.isArray(o.items) && o.items.length > 0
+    && o.items.every(i => isPlainObject(i) && typeof i.name === "string" && Number.isInteger(i.price) && i.price >= 0 && isPositiveInt(i.qty))
+    && Number.isInteger(o.subtotal) && Number.isInteger(o.shipping) && Number.isInteger(o.total)
+    && typeof o.payment === "string" && isPlainObject(o.customer);
+}
+function loadOrders() {
+  const saved = Store.read(KEYS.orders);
+  return Array.isArray(saved) ? saved.filter(isValidOrder) : [];
+}
+
+function loadState() {
+  state.stock = loadStock();
+  state.cart = sanitizeCart(Store.read(KEYS.cart));
+  state.orders = loadOrders();
+  const prefs = Store.read(KEYS.prefs);
+  if (isPlainObject(prefs)) {
+    if (typeof prefs.cep === "string" && /^\d{8}$/.test(prefs.cep) && prefs.cep !== "00000000") state.cep = prefs.cep;
+    if (SORT_OPTIONS.some(s => s.id === prefs.sort)) state.sort = prefs.sort;
+  }
+}
+
+/* ==========================================================================
+   6. PESQUISA, FILTROS E ORDENAÇÃO
+   ========================================================================== */
+function getFilteredProducts() {
+  const q = normalize(state.query);
+  const range = PRICE_RANGES.find(r => r.id === state.price) || PRICE_RANGES[0];
+  const list = PRODUCTS.filter(p => {
+    if (state.category !== "all" && p.category !== state.category) return false;
+    if (q && !normalize(p.name).includes(q)) return false;
+    if (p.price < range.min || p.price > range.max) return false;
+    return true;
+  });
+  const sorters = {
+    "name": (a, b) => a.name.localeCompare(b.name, "pt-BR"),
+    "price-asc": (a, b) => a.price - b.price || a.name.localeCompare(b.name, "pt-BR"),
+    "price-desc": (a, b) => b.price - a.price || a.name.localeCompare(b.name, "pt-BR")
+  };
+  return list.sort(sorters[state.sort] || sorters.name);
+}
+const hasActiveFilters = () => state.query.trim() !== "" || state.category !== "all" || state.price !== "all";
+function clearFilters() {
+  state.query = "";
+  state.category = "all";
+  state.price = "all";
+  document.getElementById("search-input").value = "";
+  updateCategoryNav();
+}
+
+/* ==========================================================================
+   7. OPERAÇÕES DO CARRINHO
+   ========================================================================== */
+const cartQty = id => (state.cart.find(l => l.id === id) || { qty: 0 }).qty;
+const cartCount = () => state.cart.reduce((n, l) => n + l.qty, 0);
+const fail = msg => ({ ok: false, msg });
+
+function addToCart(id, qty) {
+  const p = getProduct(id);
+  if (!p) return fail("Produto não encontrado.");
+  if (!isPositiveInt(qty)) return fail("Informe uma quantidade inteira maior que zero.");
+  const stock = state.stock[id] || 0;
+  if (stock < 1) return fail("Este produto está indisponível no momento.");
+  const current = cartQty(id);
+  if (current + qty > stock) {
+    const left = stock - current;
+    return fail(left > 0
+      ? `Estoque insuficiente. Você pode adicionar mais ${left} unidade(s) deste produto.`
+      : "Você já tem todas as unidades disponíveis no carrinho.");
+  }
+  const line = state.cart.find(l => l.id === id);
+  if (line) line.qty += qty; else state.cart.push({ id, qty });
+  saveCart();
+  return { ok: true, msg: `"${p.name}" foi adicionado ao carrinho.` };
+}
+
+function setCartQty(id, qty) {
+  const line = state.cart.find(l => l.id === id);
+  if (!line) return fail("Item não encontrado no carrinho.");
+  if (!isPositiveInt(qty)) return fail("A quantidade deve ser um número inteiro maior que zero.");
+  const stock = state.stock[id] || 0;
+  if (qty > stock) return fail(`Estoque insuficiente. Disponível: ${stock} unidade(s).`);
+  line.qty = qty;
+  saveCart();
+  return { ok: true };
+}
+
+function removeFromCart(id) {
+  state.cart = state.cart.filter(l => l.id !== id);
+  saveCart();
+}
+
+function clearCart() {
+  state.cart = [];
+  saveCart();
+}
+
+/* ==========================================================================
+   8. CÁLCULOS (subtotal, frete e total, em centavos)
+   ========================================================================== */
+function getSubtotal() {
+  return state.cart.reduce((sum, l) => { const p = getProduct(l.id); return p ? sum + p.price * l.qty : sum; }, 0);
+}
+
+const SHIPPING_REGIONS = {
+  "0": { name: "Sudeste (SP)", cost: 1490, days: "2 a 4 dias úteis" },
+  "1": { name: "Sudeste (SP)", cost: 1490, days: "2 a 4 dias úteis" },
+  "2": { name: "Sudeste (RJ/ES)", cost: 1490, days: "2 a 4 dias úteis" },
+  "3": { name: "Sudeste (MG)", cost: 1490, days: "3 a 5 dias úteis" },
+  "4": { name: "Nordeste (BA/SE)", cost: 2490, days: "5 a 8 dias úteis" },
+  "5": { name: "Nordeste", cost: 2490, days: "5 a 8 dias úteis" },
+  "6": { name: "Norte", cost: 3490, days: "7 a 12 dias úteis" },
+  "7": { name: "Centro-Oeste", cost: 2290, days: "4 a 7 dias úteis" },
+  "8": { name: "Sul (PR/SC)", cost: 1990, days: "3 a 6 dias úteis" },
+  "9": { name: "Sul (RS)", cost: 1990, days: "3 a 6 dias úteis" }
+};
+
+function parseCep(input) {
+  const digits = String(input).replace(/\D/g, "");
+  if (!/^\d{8}$/.test(digits) || digits === "00000000") return null;
+  return digits;
+}
+function quoteShipping(cepDigits, subtotal) {
+  const region = SHIPPING_REGIONS[cepDigits[0]];
+  if (!region) return null;
+  const free = subtotal >= FREE_SHIPPING_FROM;
+  return { region: region.name, cost: free ? 0 : region.cost, days: region.days, free };
+}
+function currentQuote() {
+  if (!state.cep || state.cart.length === 0) return null;
+  return quoteShipping(state.cep, getSubtotal());
+}
+function getTotals() {
+  const subtotal = getSubtotal();
+  const quote = currentQuote();
+  const shipping = quote ? quote.cost : 0;
+  return { subtotal, quote, shipping, total: subtotal + shipping };
+}
+
+/* ==========================================================================
+   9. VALIDAÇÃO DE FORMULÁRIOS
+   ========================================================================== */
+const NAME_RE = /^[\p{L}][\p{L}\s'.-]{2,79}$/u;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const FIELD_DEFS = [
+  { key: "nome", label: "Nome completo", span: 6, autocomplete: "name", check: v => NAME_RE.test(v) ? "" : "Informe um nome com pelo menos 3 letras (use um nome fictício)." },
+  { key: "email", label: "E-mail", span: 3, type: "email", autocomplete: "email", check: v => EMAIL_RE.test(v) ? "" : "Informe um e-mail válido, como nome@exemplo.com." },
+  { key: "telefone", label: "Telefone (opcional)", span: 3, type: "tel", autocomplete: "tel", check: v => v === "" || /^\d{10,11}$/.test(v.replace(/\D/g, "")) ? "" : "Informe DDD + número com 10 ou 11 dígitos." },
+  { key: "endereco", label: "Endereço", span: 4, autocomplete: "address-line1", check: v => v.length >= 3 ? "" : "Informe o endereço (mínimo de 3 caracteres)." },
+  { key: "numero", label: "Número", span: 2, check: v => /^[\w\s\/-]{1,10}$/.test(v) ? "" : "Informe o número (use S/N se não houver)." },
+  { key: "complemento", label: "Complemento (opcional)", span: 3, check: v => v.length <= 40 ? "" : "Use no máximo 40 caracteres." },
+  { key: "bairro", label: "Bairro", span: 3, check: v => v.length >= 2 ? "" : "Informe o bairro." },
+  { key: "cidade", label: "Cidade", span: 4, check: v => v.length >= 2 ? "" : "Informe a cidade." },
+  { key: "uf", label: "UF", span: 2, type: "select", check: v => UFS.includes(v) ? "" : "Selecione o estado." }
+];
+function validateCheckoutData(data) {
+  const errors = {};
+  for (const f of FIELD_DEFS) {
+    const msg = f.check(String(data[f.key] || "").trim());
+    if (msg) errors[f.key] = msg;
+  }
+  return errors;
+}
+
+/* ==========================================================================
+   10. CHECKOUT E PEDIDOS
+   ========================================================================== */
+function initCheckout() {
+  state.checkout = {
+    step: 1,
+    token: newToken(),
+    data: { nome: "", email: "", telefone: "", endereco: "", numero: "", complemento: "", bairro: "", cidade: "", uf: "" },
+    payment: "",
+    errors: {}
+  };
+}
+
+function placeOrder() {
+  const co = state.checkout;
+  if (!co) return fail("Sessão de checkout inválida. Volte ao carrinho e tente novamente.");
+
+  const existing = state.orders.find(o => o.token === co.token);
+  if (existing) return { ok: true, order: existing, duplicate: true };
+
+  if (state.cart.length === 0) return fail("Seu carrinho está vazio.");
+  for (const l of state.cart) {
+    const p = getProduct(l.id);
+    if (!p || !isPositiveInt(l.qty)) return fail("Há um item inválido no carrinho.");
+    if (l.qty > (state.stock[l.id] || 0)) {
+      state.cart = sanitizeCart(state.cart);
+      saveCart();
+      return { ok: false, msg: `Estoque insuficiente para "${p.name}". Seu carrinho foi ajustado.`, backToCart: true };
+    }
+  }
+  const quote = currentQuote();
+  if (!quote) return { ok: false, msg: "Calcule o frete no carrinho antes de concluir a compra.", backToCart: true };
+  if (Object.keys(validateCheckoutData(co.data)).length > 0) return { ok: false, msg: "Revise os dados de entrega.", backToStep: 1 };
+  if (!PAYMENTS.some(p => p.id === co.payment)) return { ok: false, msg: "Escolha uma forma de pagamento.", backToStep: 2 };
+
+  const totals = getTotals();
+  const payment = PAYMENTS.find(p => p.id === co.payment);
+  const order = {
+    id: newOrderId(),
+    token: co.token,
+    createdAt: new Date().toISOString(),
+    items: state.cart.map(l => { const p = getProduct(l.id); return { id: p.id, name: p.name, price: p.price, qty: l.qty }; }),
+    subtotal: totals.subtotal,
+    shipping: totals.shipping,
+    total: totals.total,
+    shippingInfo: { cep: state.cep, region: quote.region, days: quote.days },
+    payment: payment.label,
+    customer: { nome: co.data.nome.trim(), cidade: co.data.cidade.trim(), uf: co.data.uf }
+  };
+
+  for (const l of state.cart) state.stock[l.id] -= l.qty;
+  state.orders.unshift(order);
+  clearCart();
+  saveStock();
+  saveOrders();
+  state.checkout = null;
+  return { ok: true, order };
+}
+
+/* ==========================================================================
+   11. COMPONENTES DE INTERFACE
+   ========================================================================== */
+function productVisual(p, withTag) {
+  const el = h("div", { class: "visual", style: `--h:${p.hue}`, "aria-hidden": "true" }, h("span", { class: "emoji", text: p.emoji }));
+  if (withTag && p.oldPrice && (state.stock[p.id] || 0) > 0) el.append(h("span", { class: "tag offer corner", text: "Oferta" }));
+  return el;
+}
+
+function availabilityTag(id) {
+  const s = state.stock[id] || 0;
+  if (s < 1) return h("span", { class: "tag err", text: "Indisponível" });
+  if (s <= 5) return h("span", { class: "tag warn", text: `Últimas ${s} unidade${s > 1 ? "s" : ""}` });
+  return h("span", { class: "tag ok", text: "Em estoque" });
+}
+
+function priceBlock(p) {
+  return h("div", null, h("span", { class: "price", text: formatMoney(p.price) }),
+    p.oldPrice ? h("span", { class: "price-old" }, h("span", { class: "sr-only", text: "Preço anterior: " }), formatMoney(p.oldPrice)) : null);
+}
+
+function productCard(p) {
+  const stock = state.stock[p.id] || 0;
+  const maxed = cartQty(p.id) >= stock;
+  const addBtn = h("button", {
+    type: "button", class: "btn btn-primary",
+    disabled: stock < 1 || maxed,
+    "aria-label": `Adicionar ao carrinho: ${p.name}`,
+    text: stock < 1 ? "Indisponível" : maxed ? "Máximo no carrinho" : "Adicionar ao carrinho",
+    onclick: () => {
+      const r = addToCart(p.id, 1);
+      toast(r.msg, r.ok ? "ok" : "warn");
+      render({ keepScroll: true, focus: `#add-${p.id}` });
+    },
+    id: `add-${p.id}`
+  });
+  return h("article", { class: "card" + (stock < 1 ? " unavailable" : "") },
+    productVisual(p, true),
+    h("div", { class: "card-body" },
+      h("span", { class: "card-cat", text: p.category }),
+      h("h3", { class: "card-title" }, h("a", { href: `#/produto/${p.id}`, text: p.name })),
+      priceBlock(p),
+      availabilityTag(p.id),
+      h("div", { class: "card-actions" }, addBtn,
+        h("a", { class: "btn", href: `#/produto/${p.id}`, "aria-label": `Ver detalhes: ${p.name}`, text: "Ver detalhes" }))));
+}
+
+function quantityStepper({ idPrefix, value, min, max, label, onChange }) {
+  const input = h("input", { id: `${idPrefix}-input`, type: "number", inputmode: "numeric", min, max, value, step: 1, "aria-label": label });
+  const dec = h("button", { type: "button", id: `${idPrefix}-dec`, "aria-label": "Diminuir quantidade", text: "−", disabled: value <= min });
+  const inc = h("button", { type: "button", id: `${idPrefix}-inc`, "aria-label": "Aumentar quantidade", text: "+", disabled: value >= max });
+  const read = () => (/^\d+$/.test(input.value.trim()) ? Number(input.value.trim()) : NaN);
+  dec.addEventListener("click", () => onChange(value - 1, `#${idPrefix}-dec`));
+  inc.addEventListener("click", () => onChange(value + 1, `#${idPrefix}-inc`));
+  input.addEventListener("change", () => onChange(read(), `#${idPrefix}-input`));
+  return h("div", { class: "stepper", role: "group", "aria-label": label }, dec, input, inc);
+}
+
+function emptyState(icon, title, text, actions) {
+  return h("div", { class: "panel empty" }, h("span", { class: "big", "aria-hidden": "true", text: icon }), h("h2", { text: title }), h("p", { class: "muted", text }), actions || null);
+}
+
+function pageHead(title, extra) {
+  return h("div", { class: "page-head" }, h("h1", { id: "page-title", tabindex: "-1", text: title }), extra || null);
+}
+
+/* ==========================================================================
+   12. TELAS
+   ========================================================================== */
+function viewCatalog() {
+  const root = h("div");
+  if (!Store.available()) root.append(h("p", { class: "banner warn", role: "status", text: "O armazenamento do navegador está indisponível: carrinho e pedidos não serão preservados após recarregar." }));
+
+  if (!hasActiveFilters()) {
+    root.append(h("section", { class: "hero", "aria-labelledby": "page-title" },
+      h("div", null,
+        h("h1", { id: "page-title", tabindex: "-1", text: "Tudo para o seu pet, do petisco à caminha" }),
+        h("p", { text: `Ração, brinquedos, higiene e acessórios para cães, gatos, aves e peixes. Frete grátis (simulado) em compras a partir de ${formatMoney(FREE_SHIPPING_FROM)}.` })),
+      h("div", { class: "hero-paws", "aria-hidden": "true", text: "🐶🐱" })));
+  } else {
+    root.append(h("h1", { id: "page-title", class: "sr-only", tabindex: "-1", text: "Resultados da busca" }));
+  }
+
+  if (state.loading) {
+    const g = h("div", { class: "grid", "aria-busy": "true", "aria-label": "Carregando produtos" });
+    for (let i = 0; i < 8; i++) g.append(h("div", { class: "skeleton" }));
+    root.append(g);
+    return root;
+  }
+
+  if (!hasActiveFilters()) {
+    const offers = PRODUCTS.filter(p => p.oldPrice && (state.stock[p.id] || 0) > 0).slice(0, 3);
+    if (offers.length) {
+      root.append(h("h2", { class: "section-title", text: "Ofertas da semana" }), h("div", { class: "offers" }, offers.map(productCard)));
+    }
+  }
+
+  const priceSel = h("select", { id: "f-price", onchange: e => { state.price = e.target.value; render({ keepScroll: true, focus: "#f-price" }); } },
+    PRICE_RANGES.map(r => h("option", { value: r.id, selected: r.id === state.price, text: r.label })));
+  const catSel = h("select", { id: "f-cat", onchange: e => { state.category = e.target.value; updateCategoryNav(); render({ keepScroll: true, focus: "#f-cat" }); } },
+    h("option", { value: "all", selected: state.category === "all", text: "Todas as categorias" }),
+    CATEGORIES.map(c => h("option", { value: c, selected: c === state.category, text: c })));
+  const sortSel = h("select", { id: "f-sort", onchange: e => { state.sort = e.target.value; savePrefs(); render({ keepScroll: true, focus: "#f-sort" }); } },
+    SORT_OPTIONS.map(s => h("option", { value: s.id, selected: s.id === state.sort, text: s.label })));
+
+  root.append(h("h2", { class: "section-title", text: "Catálogo" }),
+    h("section", { class: "panel", "aria-label": "Filtros e ordenação" },
+      h("div", { class: "filters" },
+        h("div", { class: "field" }, h("label", { for: "f-cat", text: "Categoria" }), catSel),
+        h("div", { class: "field" }, h("label", { for: "f-price", text: "Faixa de preço" }), priceSel),
+        h("div", { class: "field" }, h("label", { for: "f-sort", text: "Ordenar por" }), sortSel),
+        h("button", { type: "button", class: "btn", id: "f-clear", text: "Limpar filtros", disabled: !hasActiveFilters(), onclick: () => { clearFilters(); render({ keepScroll: true, focus: "#f-cat" }); } }))));
+
+  const list = getFilteredProducts();
+  root.append(h("p", { class: "result-count", role: "status", "aria-live": "polite", text: `${list.length} produto${list.length === 1 ? "" : "s"} encontrado${list.length === 1 ? "" : "s"}` }));
+
+  if (PRODUCTS.length === 0) {
+    root.append(emptyState("📭", "Nenhum produto cadastrado", "O catálogo está vazio no momento."));
+  } else if (list.length === 0) {
+    root.append(emptyState("🔎", "Nenhum produto corresponde à sua busca", "Tente outro termo ou remova alguns filtros.",
+      h("button", { type: "button", class: "btn btn-primary", text: "Limpar filtros", onclick: () => { clearFilters(); render({}); } })));
+  } else {
+    root.append(h("div", { class: "grid" }, list.map(productCard)));
+  }
+  return root;
+}
+
+function viewProduct(id) {
+  const p = getProduct(id);
+  if (!p) {
+    return h("div", null, h("h1", { id: "page-title", tabindex: "-1", class: "sr-only", text: "Produto não encontrado" }),
+      emptyState("❓", "Produto não encontrado", "O endereço pode estar incorreto ou o produto não existe mais.",
+        h("a", { class: "btn btn-primary", href: "#/", text: "Voltar ao catálogo" })));
+  }
+  const stock = state.stock[p.id] || 0;
+  const available = Math.max(0, stock - cartQty(p.id));
+  let qty = available > 0 ? 1 : 0;
+  const msgBox = h("p", { class: "field-error", role: "alert" });
+
+  const buy = h("div", { class: "buy-box" });
+  const addBtn = h("button", { type: "button", class: "btn btn-primary", id: "detail-add", text: "Adicionar ao carrinho", disabled: available < 1 });
+  const stepperHolder = h("div");
+
+  function drawStepper() {
+    stepperHolder.replaceChildren(h("div", { class: "field" },
+      h("span", { class: "label", id: "qty-label", text: "Quantidade" }),
+      quantityStepper({
+        idPrefix: "detail-qty", value: qty, min: 1, max: Math.max(1, available), label: "Quantidade do produto",
+        onChange: (v, focusSel) => {
+          if (!isPositiveInt(v)) { msgBox.textContent = "Informe uma quantidade inteira maior que zero."; qty = Math.min(Math.max(qty, 1), available); }
+          else if (v > available) { msgBox.textContent = `Quantidade acima do disponível (${available}).`; qty = available; }
+          else { msgBox.textContent = ""; qty = v; }
+          drawStepper();
+          const el = document.querySelector(focusSel); if (el && !el.disabled) el.focus();
+        }
+      })));
+  }
+  if (available > 0) drawStepper();
+
+  addBtn.addEventListener("click", () => {
+    const r = addToCart(p.id, qty);
+    if (!r.ok) { msgBox.textContent = r.msg; toast(r.msg, "warn"); return; }
+    toast(r.msg, "ok");
+    render({ keepScroll: true, focus: "#detail-add" });
+  });
+
+  buy.append(stepperHolder, addBtn);
+  const inCart = cartQty(p.id);
+
+  return h("div", null,
+    h("a", { class: "back-link", href: "#/", text: "← Voltar ao catálogo" }),
+    h("article", { class: "detail" },
+      productVisual(p, true),
+      h("div", { class: "detail-info" },
+        h("p", { class: "card-cat", text: p.category }),
+        h("h1", { id: "page-title", tabindex: "-1", text: p.name }),
+        priceBlock(p),
+        h("p", null, availabilityTag(p.id), stock > 0 ? h("span", { class: "muted", text: `  ${stock} em estoque` }) : null),
+        h("p", { text: p.description }),
+        inCart > 0 ? h("p", { class: "hint", text: `Você já tem ${inCart} unidade${inCart > 1 ? "s" : ""} no carrinho.` }) : null,
+        stock < 1 ? h("p", { class: "banner err", text: "Produto indisponível no momento." }) :
+          available < 1 ? h("p", { class: "banner warn", text: "Você já adicionou todas as unidades disponíveis." }) : buy,
+        msgBox,
+        h("p", null, h("a", { href: "#/carrinho", text: "Ir para o carrinho" })))));
+}
+
+function cartLine(l) {
+  const p = getProduct(l.id);
+  const stock = state.stock[l.id] || 0;
+  const errBox = h("p", { class: "field-error", role: "alert" });
+  const change = (v, focusSel) => {
+    const r = setCartQty(l.id, v);
+    if (!r.ok) { toast(r.msg, "warn"); }
+    render({ keepScroll: true, focus: focusSel });
+  };
+  return h("li", { class: "cart-line", style: "list-style:none" },
+    productVisual(p, false),
+    h("div", null,
+      h("h3", null, h("a", { href: `#/produto/${p.id}`, text: p.name })),
+      h("span", { class: "muted", text: `${formatMoney(p.price)} cada` }),
+      h("div", { class: "line-controls" },
+        quantityStepper({ idPrefix: `cart-${p.id}`, value: l.qty, min: 1, max: stock, label: `Quantidade de ${p.name}`, onChange: change }),
+        h("button", { type: "button", class: "btn btn-danger", "aria-label": `Remover ${p.name} do carrinho`, text: "Remover",
+          onclick: () => { removeFromCart(p.id); toast("Item removido do carrinho.", "ok"); render({ keepScroll: true, focus: "#cart-title" }); } })),
+      l.qty >= stock ? h("p", { class: "hint", text: "Quantidade máxima disponível em estoque." }) : null,
+      errBox),
+    h("div", { class: "line-total", text: formatMoney(p.price * l.qty) }));
+}
+
+function summaryBlock(totals, opts) {
+  const rows = [
+    h("div", { class: "row" }, h("dt", { text: `Subtotal (${cartCount()} ${cartCount() === 1 ? "item" : "itens"})` }), h("dd", { text: formatMoney(totals.subtotal) })),
+    h("div", { class: "row" }, h("dt", { text: "Frete (simulado)" }),
+      h("dd", { text: totals.quote ? (totals.quote.free ? "Grátis" : formatMoney(totals.shipping)) : "Calcule o frete" })),
+    h("div", { class: "row total" }, h("dt", { text: "Total" }), h("dd", { text: formatMoney(totals.total) }))
+  ];
+  return h("dl", null, rows);
+}
+
+function viewCart() {
+  const root = h("div");
+  root.append(h("div", { class: "page-head" }, h("h1", { id: "page-title", tabindex: "-1", text: "Seu carrinho" })));
+  const titleAnchor = h("span", { id: "cart-title", tabindex: "-1", class: "sr-only", text: "Carrinho atualizado" });
+  root.append(titleAnchor);
+
+  if (state.cart.length === 0) {
+    root.append(emptyState("🛒", "Seu carrinho está vazio", "Adicione produtos do catálogo para continuar.",
+      h("a", { class: "btn btn-primary", href: "#/", text: "Ver produtos" })));
+    return root;
+  }
+
+  const totals = getTotals();
+  const cepInput = h("input", { id: "cep-input", type: "text", inputmode: "numeric", autocomplete: "postal-code", maxlength: "9", placeholder: "00000-000", value: state.cep ? formatCep(state.cep) : "", "aria-describedby": "cep-error cep-hint" });
+  const cepError = h("p", { class: "field-error", id: "cep-error", role: "alert" });
+  const shipForm = h("form", { class: "ship-form", novalidate: true, onsubmit: e => {
+    e.preventDefault();
+    const digits = parseCep(cepInput.value);
+    if (!digits) {
+      cepError.textContent = "CEP inválido. Informe 8 números, como 01310-100.";
+      cepInput.setAttribute("aria-invalid", "true");
+      cepInput.focus();
+      return;
+    }
+    state.cep = digits;
+    savePrefs();
+    toast("Frete calculado (simulação).", "ok");
+    render({ keepScroll: true, focus: "#cep-input" });
+  } },
+    h("div", { class: "field" }, h("label", { for: "cep-input", text: "CEP de entrega" }), cepInput, cepError,
+      h("p", { class: "hint", id: "cep-hint", text: "Digite com ou sem hífen." })),
+    h("button", { type: "submit", class: "btn", style: "margin-top:28px", text: "Calcular frete" }));
+
+  const shipResult = totals.quote
+    ? h("div", { class: "ship-result", role: "status" },
+        h("strong", { text: totals.quote.free ? "Frete grátis (simulado)" : `Frete de ${formatMoney(totals.quote.cost)} (simulado)` }),
+        h("div", { text: `Região: ${totals.quote.region} • Prazo fictício: ${totals.quote.days}` }),
+        totals.quote.free ? null : h("div", { class: "muted", text: `Faltam ${formatMoney(FREE_SHIPPING_FROM - totals.subtotal)} para frete grátis.` }),
+        h("div", { class: "muted", text: "Valores e prazos de demonstração, não representam uma cotação real." }))
+    : null;
+
+  const checkoutBtn = h("button", { type: "button", class: "btn btn-primary btn-block", text: "Ir para o checkout", onclick: () => {
+    if (!state.cep) {
+      toast("Calcule o frete antes de continuar.", "warn");
+      cepError.textContent = "Informe o CEP e calcule o frete para continuar.";
+      cepInput.setAttribute("aria-invalid", "true");
+      cepInput.focus();
+      return;
+    }
+    initCheckout();
+    location.hash = "#/checkout";
+  } });
+
+  const emptyBtn = h("button", { type: "button", class: "btn btn-danger btn-block", text: "Esvaziar carrinho", onclick: async () => {
+    const ok = await confirmDialog("Esvaziar carrinho?", "Todos os itens serão removidos. Esta ação não pode ser desfeita.", "Esvaziar");
+    if (!ok) return;
+    clearCart();
+    toast("Carrinho esvaziado.", "ok");
+    render({ keepScroll: true });
+  } });
+
+  root.append(h("div", { class: "cart-layout" },
+    h("ul", { class: "cart-lines", style: "padding:0;margin:0", "aria-label": "Itens do carrinho" }, state.cart.map(cartLine)),
+    h("aside", { class: "panel summary stack", "aria-label": "Resumo do pedido" },
+      h("h2", { text: "Resumo" }), summaryBlock(totals), shipForm, shipResult, checkoutBtn, emptyBtn,
+      h("a", { class: "btn btn-ghost btn-block", href: "#/", text: "Continuar comprando" }))));
+  return root;
+}
+
+/* ---------- checkout ---------- */
+function checkoutStepper(step) {
+  const names = ["Entrega", "Pagamento", "Revisão"];
+  return h("ol", { class: "steps", "aria-label": "Etapas do checkout" }, names.map((n, i) => {
+    const idx = i + 1;
+    return h("li", { class: idx < step ? "done" : "", "aria-current": idx === step ? "step" : null },
+      h("span", { class: "n", "aria-hidden": "true", text: idx < step ? "✓" : String(idx) }), n, idx < step ? h("span", { class: "sr-only", text: " (concluída)" }) : null);
+  }));
+}
+
+function checkoutSummary() {
+  const totals = getTotals();
+  return h("aside", { class: "panel summary stack", "aria-label": "Resumo do pedido" },
+    h("h2", { text: "Seu pedido" }),
+    h("ul", { class: "review-list" }, state.cart.map(l => { const p = getProduct(l.id); return h("li", null, h("span", { text: `${l.qty} × ${p.name}` }), h("strong", { text: formatMoney(p.price * l.qty) })); })),
+    summaryBlock(totals),
+    totals.quote ? h("p", { class: "hint", text: `Entrega para ${formatCep(state.cep)} • ${totals.quote.days} (fictício)` }) : null);
+}
+
+function viewCheckout() {
+  const root = h("div");
+  root.append(h("h1", { id: "page-title", tabindex: "-1", text: "Finalizar compra" }));
+  if (state.cart.length === 0) {
+    root.append(emptyState("🛒", "Seu carrinho está vazio", "Adicione produtos antes de finalizar a compra.", h("a", { class: "btn btn-primary", href: "#/", text: "Ver produtos" })));
+    return root;
+  }
+  if (!state.cep || !currentQuote()) {
+    root.append(emptyState("📮", "Falta calcular o frete", "Informe seu CEP no carrinho para continuar.", h("a", { class: "btn btn-primary", href: "#/carrinho", text: "Voltar ao carrinho" })));
+    return root;
+  }
+  if (!state.checkout) initCheckout();
+  const co = state.checkout;
+  root.append(h("p", { class: "banner warn", text: "Demonstração: use apenas dados fictícios. Nenhuma cobrança será feita e os dados de entrega não ficam salvos no navegador." }));
+  root.append(checkoutStepper(co.step));
+
+  const body = co.step === 1 ? stepDelivery(co) : co.step === 2 ? stepPayment(co) : stepReview(co);
+  root.append(h("div", { class: "cart-layout" }, body, checkoutSummary()));
+  return root;
+}
+
+function stepDelivery(co) {
+  const form = h("form", { class: "panel", novalidate: true, "aria-labelledby": "step-title", onsubmit: e => {
+    e.preventDefault();
+    co.errors = validateCheckoutData(co.data);
+    const keys = Object.keys(co.errors);
+    if (keys.length) {
+      toast("Corrija os campos destacados.", "err");
+      render({ keepScroll: true, focus: `#f-${keys[0]}` });
+      return;
+    }
+    co.step = 2; co.errors = {};
+    render({ focus: "#page-title" });
+  } });
+  form.append(h("h2", { id: "step-title", text: "Dados de entrega" }));
+  const grid = h("div", { class: "form-grid" });
+  grid.append(h("div", { class: "field span-3" }, h("span", { class: "label", text: "CEP" }),
+    h("p", { style: "margin:0;min-height:44px;display:flex;align-items:center;gap:10px;flex-wrap:wrap" }, h("strong", { text: formatCep(state.cep) }), h("a", { href: "#/carrinho", text: "Alterar no carrinho" }))));
+  grid.append(h("div", { class: "span-3" }));
+  for (const f of FIELD_DEFS) {
+    const err = co.errors[f.key];
+    let control;
+    const common = { id: `f-${f.key}`, name: f.key, "aria-invalid": err ? "true" : null, "aria-describedby": err ? `e-${f.key}` : null, autocomplete: f.autocomplete };
+    if (f.type === "select") {
+      control = h("select", { ...common, onchange: e => { co.data[f.key] = e.target.value; } },
+        h("option", { value: "", text: "Selecione" }),
+        UFS.map(u => h("option", { value: u, selected: co.data[f.key] === u, text: u })));
+    } else {
+      control = h("input", { ...common, type: f.type || "text", value: co.data[f.key], maxlength: "80", oninput: e => { co.data[f.key] = e.target.value; } });
+    }
+    grid.append(h("div", { class: `field span-${f.span}` }, h("label", { for: `f-${f.key}`, text: f.label }), control, h("p", { class: "field-error", id: `e-${f.key}`, text: err || "" })));
+  }
+  form.append(grid, h("div", { class: "form-actions" },
+    h("a", { class: "btn", href: "#/carrinho", text: "Voltar ao carrinho" }),
+    h("button", { type: "submit", class: "btn btn-primary", text: "Continuar para pagamento" })));
+  return form;
+}
+
+function stepPayment(co) {
+  const errBox = h("p", { class: "field-error", id: "pay-error", role: "alert", text: co.errors.payment || "" });
+  const form = h("form", { class: "panel", novalidate: true, onsubmit: e => {
+    e.preventDefault();
+    if (!PAYMENTS.some(p => p.id === co.payment)) {
+      co.errors = { payment: "Escolha uma forma de pagamento para continuar." };
+      toast("Escolha uma forma de pagamento.", "err");
+      render({ keepScroll: true, focus: "#pay-pix" });
+      return;
+    }
+    co.errors = {}; co.step = 3;
+    render({ focus: "#page-title" });
+  } });
+  form.append(h("fieldset", { style: "border:0;padding:0;margin:0" },
+    h("legend", { style: "font-family:var(--font-display);font-size:1.35rem;margin-bottom:12px", text: "Forma de pagamento (simulada)" }),
+    h("div", { class: "stack" }, PAYMENTS.map(p =>
+      h("label", { class: "radio-card", for: `pay-${p.id}` },
+        h("input", { type: "radio", name: "payment", id: `pay-${p.id}`, value: p.id, checked: co.payment === p.id, "aria-describedby": "pay-error", onchange: () => { co.payment = p.id; co.errors = {}; errBox.textContent = ""; } }),
+        h("span", null, h("strong", { text: p.label }), h("br"), h("span", { class: "muted", text: p.help }))))),
+    errBox));
+  form.append(h("div", { class: "form-actions" },
+    h("button", { type: "button", class: "btn", text: "Voltar", onclick: () => { co.step = 1; render({ focus: "#page-title" }); } }),
+    h("button", { type: "submit", class: "btn btn-primary", text: "Revisar pedido" })));
+  return form;
+}
+
+function stepReview(co) {
+  const totals = getTotals();
+  const pay = PAYMENTS.find(p => p.id === co.payment);
+  const d = co.data;
+  const confirmBtn = h("button", { type: "button", class: "btn btn-primary", id: "confirm-order", text: "Confirmar pedido simulado", disabled: state.placing });
+  confirmBtn.addEventListener("click", () => {
+    if (state.placing) return;           // evita cliques repetidos
+    state.placing = true;
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = "Processando…";
+    setTimeout(() => {
+      let result;
+      try { result = placeOrder(); } catch (e) { result = fail("Não foi possível concluir o pedido. Tente novamente."); }
+      state.placing = false;
+      if (!result.ok) {
+        toast(result.msg, "err");
+        if (result.backToCart) { location.hash = "#/carrinho"; render({}); return; }
+        if (result.backToStep && state.checkout) state.checkout.step = result.backToStep;
+        render({ focus: "#page-title" });
+        return;
+      }
+      state.justPlacedId = result.order.id;
+      updateHeader();
+      toast(result.duplicate ? "Este pedido já havia sido registrado." : "Pedido simulado confirmado!", result.duplicate ? "warn" : "ok");
+      location.hash = `#/pedido/${encodeURIComponent(result.order.id)}`;
+    }, 700);
+  });
+  return h("section", { class: "panel stack", "aria-labelledby": "step-title" },
+    h("h2", { id: "step-title", text: "Revise seu pedido" }),
+    h("dl", { class: "kv" },
+      h("dt", { text: "Nome" }), h("dd", { text: d.nome.trim() }),
+      h("dt", { text: "E-mail" }), h("dd", { text: d.email.trim() }),
+      h("dt", { text: "Telefone" }), h("dd", { text: d.telefone.trim() || "Não informado" }),
+      h("dt", { text: "Entrega" }), h("dd", { text: `${d.endereco.trim()}, ${d.numero.trim()}${d.complemento.trim() ? " – " + d.complemento.trim() : ""} • ${d.bairro.trim()} • ${d.cidade.trim()}/${d.uf} • CEP ${formatCep(state.cep)}` }),
+      h("dt", { text: "Prazo" }), h("dd", { text: `${totals.quote.days} (fictício)` }),
+      h("dt", { text: "Pagamento" }), h("dd", { text: pay ? pay.label : "—" }),
+      h("dt", { text: "Total" }), h("dd", null, h("strong", { text: formatMoney(totals.total) }))),
+    h("p", { class: "hint", text: "Ao confirmar, o estoque da demonstração será reduzido e o pedido ficará no histórico deste navegador. Nenhuma cobrança será feita." }),
+    h("div", { class: "form-actions" },
+      h("button", { type: "button", class: "btn", text: "Voltar", disabled: state.placing, onclick: () => { co.step = 2; render({ focus: "#page-title" }); } }),
+      confirmBtn));
+}
+
+/* ---------- pedidos ---------- */
+function orderTable(o) {
+  return h("div", { class: "table-wrap" }, h("table", null,
+    h("caption", { class: "sr-only", text: `Itens do pedido ${o.id}` }),
+    h("thead", null, h("tr", null, h("th", { scope: "col", text: "Produto" }), h("th", { scope: "col", class: "num", text: "Qtd." }), h("th", { scope: "col", class: "num", text: "Unitário" }), h("th", { scope: "col", class: "num", text: "Subtotal" }))),
+    h("tbody", null, o.items.map(i => h("tr", null, h("td", { text: i.name }), h("td", { class: "num", text: String(i.qty) }), h("td", { class: "num", text: formatMoney(i.price) }), h("td", { class: "num", text: formatMoney(i.price * i.qty) }))))));
+}
+
+function viewOrders() {
+  const root = h("div", null, h("div", { class: "page-head" }, h("h1", { id: "page-title", tabindex: "-1", text: "Meus pedidos" })));
+  if (state.orders.length === 0) {
+    root.append(emptyState("📦", "Você ainda não fez pedidos", "Os pedidos simulados aparecerão aqui.", h("a", { class: "btn btn-primary", href: "#/", text: "Ver produtos" })));
+    return root;
+  }
+  root.append(h("div", { class: "order-list" }, state.orders.map(o =>
+    h("article", { class: "order-row" },
+      h("div", null, h("div", { class: "order-id", text: o.id }), h("div", { class: "muted", text: `${formatDate(o.createdAt)} • ${o.items.reduce((n, i) => n + i.qty, 0)} item(ns)` })),
+      h("div", null, h("strong", { text: formatMoney(o.total) })),
+      h("a", { class: "btn", href: `#/pedido/${encodeURIComponent(o.id)}`, "aria-label": `Ver detalhes do pedido ${o.id}`, text: "Ver detalhes" })))));
+  return root;
+}
+
+function viewOrder(id) {
+  const o = state.orders.find(x => x.id === id);
+  if (!o) {
+    return h("div", null, h("h1", { id: "page-title", tabindex: "-1", class: "sr-only", text: "Pedido não encontrado" }),
+      emptyState("❓", "Pedido não encontrado", "Verifique o código ou volte ao histórico.", h("a", { class: "btn btn-primary", href: "#/pedidos", text: "Ver meus pedidos" })));
+  }
+  const fresh = state.justPlacedId === o.id;
+  const info = o.shippingInfo || {};
+  return h("div", { class: "stack" },
+    fresh ? h("div", { class: "banner ok", role: "status" }, h("strong", { text: "Pedido simulado confirmado! " }), "Guarde o código abaixo. Nenhuma cobrança ou envio real foi feito.") : null,
+    h("div", { class: "page-head" }, h("div", null, h("h1", { id: "page-title", tabindex: "-1", text: `Pedido ${o.id}` }), h("span", { class: "muted", text: formatDate(o.createdAt) })),
+      h("span", { class: "tag ok", text: "Simulado" })),
+    h("section", { class: "panel stack", "aria-label": "Detalhes do pedido" },
+      orderTable(o),
+      h("dl", { class: "kv" },
+        h("dt", { text: "Subtotal" }), h("dd", { text: formatMoney(o.subtotal) }),
+        h("dt", { text: "Frete" }), h("dd", { text: o.shipping === 0 ? "Grátis" : formatMoney(o.shipping) }),
+        h("dt", { text: "Total" }), h("dd", null, h("strong", { text: formatMoney(o.total) })),
+        h("dt", { text: "Pagamento" }), h("dd", { text: o.payment }),
+        h("dt", { text: "Cliente" }), h("dd", { text: `${o.customer.nome || "—"} • ${o.customer.cidade || ""}/${o.customer.uf || ""}` }),
+        info.cep ? h("dt", { text: "Entrega" }) : null,
+        info.cep ? h("dd", { text: `CEP ${formatCep(String(info.cep))} • ${info.region || ""} • prazo fictício: ${info.days || ""}` }) : null)),
+    h("div", { class: "form-actions", style: "justify-content:flex-start" },
+      h("a", { class: "btn btn-primary", href: "#/", text: "Continuar comprando" }),
+      h("a", { class: "btn", href: "#/pedidos", text: "Ver todos os pedidos" })));
+}
+
+/* ==========================================================================
+   13. RENDERIZAÇÃO E ROTEAMENTO
+   ========================================================================== */
+function parseRoute() {
+  const raw = location.hash.replace(/^#\/?/, "");
+  const [name, ...rest] = raw.split("/");
+  let arg = rest.join("/");
+  try { arg = decodeURIComponent(arg); } catch (e) { /* mantém o valor bruto */ }
+  return { name: name || "", arg };
+}
+
+function updateHeader() {
+  const n = cartCount();
+  document.getElementById("cart-badge").textContent = String(n);
+  document.getElementById("cart-link").setAttribute("aria-label", `Carrinho, ${n} ${n === 1 ? "item" : "itens"}`);
+}
+
+function updateCategoryNav() {
+  const list = document.getElementById("cat-list");
+  list.replaceChildren();
+  const make = (id, label) => h("li", null, h("button", {
+    type: "button", class: "chip", "aria-pressed": state.category === id ? "true" : "false", text: label,
+    onclick: () => {
+      state.category = id;
+      updateCategoryNav();
+      if (parseRoute().name !== "") location.hash = "#/"; else render({ keepScroll: true });
+    }
+  }));
+  list.append(make("all", "Todos"), CATEGORIES.map(c => make(c, c)));
+}
+
+function render(opts) {
+  opts = opts || {};
+  const app = document.getElementById("app");
+  const route = parseRoute();
+  const scrollY = window.scrollY;
+  let view;
+  try {
+    switch (route.name) {
+      case "": view = viewCatalog(); break;
+      case "produto": view = viewProduct(route.arg); break;
+      case "carrinho": view = viewCart(); break;
+      case "checkout": view = viewCheckout(); break;
+      case "pedidos": view = viewOrders(); break;
+      case "pedido": view = viewOrder(route.arg); break;
+      default: view = emptyState("🧭", "Página não encontrada", "O endereço acessado não existe.", h("a", { class: "btn btn-primary", href: "#/", text: "Ir para o início" }));
+    }
+  } catch (e) {
+    console.error(e);
+    view = emptyState("⚠️", "Algo deu errado", "Não foi possível exibir esta página. Tente voltar ao início.", h("a", { class: "btn btn-primary", href: "#/", text: "Ir para o início" }));
+  }
+  app.replaceChildren(view);
+  updateHeader();
+  if (opts.keepScroll) window.scrollTo(0, scrollY);
+  if (opts.focus) {
+    const el = document.querySelector(opts.focus);
+    if (el) el.focus({ preventScroll: !!opts.keepScroll });
+  }
+}
+
+function onRouteChange() {
+  const route = parseRoute();
+  if (route.name !== "checkout") { /* mantém o token enquanto o usuário volta ao carrinho */ }
+  if (route.name !== "pedido") state.justPlacedId = null;
+  render({});
+  window.scrollTo(0, 0);
+  const title = document.getElementById("page-title");
+  if (title) title.focus({ preventScroll: true });
+}
+
+/* ==========================================================================
+   14. INICIALIZAÇÃO
+   ========================================================================== */
+function resetDemo() {
+  Object.values(KEYS).forEach(k => Store.remove(k));
+  state.stock = loadStock();
+  state.cart = [];
+  state.orders = [];
+  state.cep = "";
+  state.sort = "name";
+  state.checkout = null;
+  state.justPlacedId = null;
+  clearFilters();
+  toast("Dados da demonstração reiniciados.", "ok");
+  if (location.hash && location.hash !== "#/") location.hash = "#/"; else render({});
+}
+
+function init() {
+  loadState();
+  updateCategoryNav();
+  updateHeader();
+
+  const searchInput = document.getElementById("search-input");
+  const applySearch = () => {
+    state.query = searchInput.value;
+    if (parseRoute().name !== "") { location.hash = "#/"; } else render({ keepScroll: true });
+  };
+  document.getElementById("search-form").addEventListener("submit", e => { e.preventDefault(); applySearch(); });
+  searchInput.addEventListener("input", () => { state.query = searchInput.value; if (parseRoute().name === "") render({ keepScroll: true }); });
+
+  document.getElementById("reset-demo").addEventListener("click", async () => {
+    const ok = await confirmDialog("Reiniciar a demonstração?", "Carrinho, pedidos e estoque voltarão ao estado inicial neste navegador.", "Reiniciar");
+    if (ok) resetDemo();
+  });
+
+  window.addEventListener("hashchange", onRouteChange);
+  window.addEventListener("storage", e => {
+    if (Object.values(KEYS).includes(e.key)) { loadState(); render({ keepScroll: true }); }
+  });
+
+  render({});
+  setTimeout(() => { state.loading = false; if (parseRoute().name === "") render({ keepScroll: true }); }, 450);
+}
+
+init();
+</script>
+</body>
+</html>
