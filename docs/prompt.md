@@ -1,223 +1,214 @@
-# PROMPT — CRIAÇÃO DE UMA APLICAÇÃO WEB DE E-COMMERCE DE PETZ SHOP ONLINE, UTILIZANDO A IA GENERATIVA
+# PROMPT — CREATION OF AN ONLINE PET SHOP E-COMMERCE WEB APPLICATION USING GENERATIVE AI
 
-## 1. Papel da IA
+## 1. Role of AI
 
-Atue como um desenvolvedor web sênior, especialista em HTML5, CSS3, JavaScript, UX/UI, responsividade, acessibilidade e regras de negócio de comércio eletrônico.
+Act as a senior web developer, specializing in HTML5, CSS3, JavaScript, UX/UI, responsiveness, accessibility, and e-commerce business rules.
 
-Seu objetivo é criar uma aplicação web de e-commerce funcional, organizada e visualmente profissional, utilizando exclusivamente tecnologias executadas no navegador.
+Your goal is to create a functional, well-organized, and visually professional e-commerce web application using only technologies that run in the browser.
 
-**RESTRIÇÃO OBRIGATÓRIA: NÃO CRIE TESTES AUTOMATIZADOS.**
+**MANDATORY RESTRICTION: DO NOT CREATE AUTOMATED TESTS.**
 
-Não gere arquivos de testes, scripts de testes, testes unitários, testes de integração automatizados, testes end-to-end, configurações de frameworks de teste, pipelines de testes ou dependências destinadas à automação de testes.
+Do not generate test files, test scripts, unit tests, automated integration tests, end-to-end tests, test framework configurations, test pipelines, or dependencies meant for test automation.
 
-Não utilize ferramentas ou frameworks como Jest, Vitest, Cypress, Playwright, Selenium, Mocha ou equivalentes.
+Do not use tools or frameworks such as Jest, Vitest, Cypress, Playwright, Selenium, Mocha, or equivalents.
 
-A validação posterior da aplicação será realizada manualmente por um profissional de Quality Assurance (QA), utilizando técnicas, cenários, casos de teste e evidências documentadas fora do código-fonte da aplicação.
+The subsequent validation of the application will be carried out manually by a Quality Assurance (QA) professional, using techniques, scenarios, test cases, and documented evidence outside the application's source code. 
 
-## 2. Contexto de negócio
+## 2. Business Context
+Create a fictitious online store called OrangeTech Store, specializing in selling electronics and tech accessories to end consumers (B2C). The target audience is people who want to research, compare, and buy tech products using computers, tablets, or smartphones. The goal is to provide a simple, intuitive, responsive, and consistent shopping experience. The application will be used as a demo project to practice manual software testing, risk analysis, defect identification, and quality documentation. 
 
-Crie uma loja virtual fictícia chamada OrangeTech Store, especializada na venda de eletrônicos e acessórios tecnológicos para consumidores finais (B2C).
+## 3. Mandatory Technical Requirements
+- Develop the application in a single file called index.html.
+- Use HTML5 to structure the application.
+- Put all the CSS inside a single style tag in the HTML itself.
+- Put all the JavaScript inside one or more script tags in the same HTML.
+- Do not create external CSS or JavaScript files.
+- Do not use interface frameworks like React, Angular, or Vue.
+- Do not require installation of dependencies, compilation, or an application server for the basic demo.
+- Use localStorage to preserve non-sensitive data between sessions, like cart and preferences.
+- Handle errors when reading and writing to local storage.
+- Do not store passwords, financial data, or unnecessary personal information.
+- The application should work on modern browsers and adapt to both desktop and mobile screens.
+- Do not rely on external APIs for essential functionality.
+- If you use external images, provide visual alternatives or placeholders for cases where images don’t load.
+- Use fictitious product data and prices in reais (R$).
 
-O público-alvo são pessoas que desejam pesquisar, comparar e comprar produtos tecnológicos por meio de computadores, tablets ou smartphones.
+## 4. Visual Identity and User Experience 
 
-O objetivo é proporcionar uma experiência de compra simples, intuitiva, responsiva e consistente.
+Adopt a dark theme with orange tones as the accent color. 
 
-A aplicação será utilizada como projeto demonstrativo para praticar testes manuais de software, análise de riscos, identificação de defeitos e documentação de qualidade.
+Visual reference: 
+- Main background: graphite or almost black.
+- Cards and panels: dark gray.
+- Accent color: orange.
+- Main text: white or light gray.
+- Secondary text: gray with enough contrast.
+- Primary buttons: orange with readable text.
+- Success, warning, and error states: distinct and accessible colors.
 
-## 3. Requisitos técnicos obrigatórios
+Use a modern layout, consistent spacing, legible typography, product cards, understandable icons, and visual feedback for user actions. 
 
-- Desenvolva a aplicação em um único arquivo chamado index.html.
-- Utilize HTML5 para estruturar a aplicação.
-- Coloque todo o CSS dentro de uma única tag style no próprio HTML.
-- Coloque todo o JavaScript dentro de uma ou mais tags script no mesmo HTML.
-- Não crie arquivos externos de CSS ou JavaScript.
-- Não utilize frameworks de interface como React, Angular ou Vue.
-- Não exija instalação de dependências, compilação ou servidor de aplicação para a demonstração básica.
-- Utilize localStorage para preservar dados não sensíveis entre sessões, como carrinho e preferências.
-- Trate erros de leitura e gravação no armazenamento local.
-- Não armazene senhas, dados financeiros ou informações pessoais desnecessárias.
-- A aplicação deverá funcionar nos navegadores modernos e adaptar-se a telas desktop e mobile.
-- Não utilize APIs externas obrigatórias para que as funcionalidades essenciais funcionem.
-- Caso utilize imagens externas, forneça alternativas visuais ou placeholders para situações em que as imagens não carreguem.
-- Utilize dados de produtos fictícios e valores em reais (R$).
+Ensure keyboard navigation, visible focus, field labels, accessible validation messages, and proper contrast. 
 
-## 4. Identidade visual e experiência do usuário
+## 5. Required Features 
 
-Adote um tema escuro com tons de laranja como cor de destaque.
+### 5.1 Home Page 
+- Header with OrangeTech Store logo.
+- Search field.
+- Navigation by categories.
+- Access to the cart with item quantity indicator.
+- Highlight area for products and offers.
+- Catalog with fictitious products.
 
-Referência visual:
-- Fundo principal: grafite ou quase preto.
-- Cards e painéis: cinza-escuro.
-- Cor de destaque: laranja.
-- Textos principais: branco ou cinza-claro.
-- Textos secundários: cinza com contraste suficiente.
-- Botões primários: laranja com texto legível.
-- Estados de sucesso, atenção e erro: cores distintas e acessíveis.
+### 5.2 Product catalog 
+- Display at least 12 fictitious products.
+- Use categories like smartphones, laptops, audio, peripherals, and accessories.
+- Show name, image or placeholder, price, category, and availability.
+- Provide a button to add to the cart.
+- Show out-of-stock indication when inventory is zero.
 
-Utilize layout moderno, espaçamento consistente, tipografia legível, cards de produtos, ícones compreensíveis e feedback visual para as ações do usuário.
+### 5.3 Search, filters, and sorting
+- Search products by name.
+- Filter by category.
+- Filter by price range.
+- Sort by lowest price, highest price, and name.
+- Display an appropriate message when no products match the search.
+- Allow clearing the filters.
 
-Garanta navegação por teclado, foco visível, rótulos para campos, mensagens de validação acessíveis e contraste adequado.
+### 5.4 Product details 
+- Show full description.
+- Show price and availability.
+- Allow selecting quantity based on stock.
+- Allow adding the product to the cart.
+- Validate data and quantities before updating the cart.
 
-## 5. Funcionalidades obrigatórias
+### 5.5 Shopping cart 
+- Add products.
+- Remove products.
+- Increase or decrease quantities.
+- Prevent invalid quantities or quantities exceeding stock.
+- Automatically update subtotal and total.
+- Display the empty cart state.
+- Preserve the cart after page refresh.
+- Provide an option to empty the cart with confirmation.
+- Avoid duplicate products as independent lines when they can be grouped by the same identifier.
 
-### 5.1 Página inicial
-- Cabeçalho com logotipo OrangeTech Store.
-- Campo de pesquisa.
-- Navegação por categorias.
-- Acesso ao carrinho com indicador de quantidade de itens.
-- Área de destaque para produtos e ofertas.
-- Catálogo com produtos fictícios.
+### 5.6 Shipping 
+- Provide a field for ZIP code.
+- Validate the ZIP code format.
+- Simulate shipping cost calculation with clearly defined local rules.
+- Inform a fictitious estimated delivery time.
+- Recalculate the total when the shipping method changes.
+- Do not claim that the delivery time or amount represents a real quote.
 
-### 5.2 Catálogo de produtos
-- Exibir pelo menos 12 produtos fictícios.
-- Utilizar categorias como smartphones, notebooks, áudio, periféricos e acessórios.
-- Exibir nome, imagem ou placeholder, preço, categoria e disponibilidade.
-- Disponibilizar botão para adicionar ao carrinho.
-- Exibir indicação de indisponibilidade quando o estoque estiver zerado.
+### 5.7 Checkout and purchase completion 
+- Show a summary of products, quantities, subtotal, shipping, and total.
+- Request only the fictitious data necessary for the demonstration.
+- Validate required fields, formats, and inconsistent data.
+- Offer payment methods only as simulated options.
+- Do not request or store real card numbers, security codes, or bank passwords.
+- Present a review step before confirmation.
+- Allow completing a simulated purchase.
+- Generate a demonstrative order identifier.
+- Display order confirmation with a purchase summary.
+- Do not make real charges or financial integrations.
+- Do not complete a purchase with an empty cart or insufficient stock.
 
-### 5.3 Pesquisa, filtros e ordenação
-- Pesquisar produtos por nome.
-- Filtrar por categoria.
-- Filtrar por faixa de preço.
-- Ordenar por menor preço, maior preço e nome.
-- Exibir mensagem adequada quando nenhum produto corresponder à pesquisa.
-- Permitir limpar os filtros.
+### 5.8 Order history 
+- Record fake orders in localStorage.
+- Display simulated orders and their items.
+- Allow viewing the details of an order.
+- Handle the absence of history.
+- Avoid duplicating the same order due to repeated clicks on confirmation.
 
-### 5.4 Detalhes do produto
-- Exibir descrição completa.
-- Exibir preço e disponibilidade.
-- Permitir selecionar quantidade respeitando o estoque.
-- Permitir adicionar o produto ao carrinho.
-- Validar dados e quantidades antes de atualizar o carrinho.
+### 5.9 Feedback and error handling 
+- Display success, warning, and error messages.
+- Prevent invalid actions.
+- Offer loading states when it makes sense.
+- Display understandable messages instead of showing technical errors directly to the user.
+- Handle invalid data, unavailable storage, and absence of products.
+- Ask for confirmation for destructive actions.
 
-### 5.5 Carrinho de compras
-- Adicionar produtos.
-- Remover produtos.
-- Aumentar ou diminuir quantidades.
-- Impedir quantidades inválidas ou superiores ao estoque.
-- Atualizar subtotal e total automaticamente.
-- Exibir o estado vazio do carrinho.
-- Preservar o carrinho após atualização da página.
-- Disponibilizar opção para esvaziar o carrinho mediante confirmação.
-- Evitar produtos duplicados como linhas independentes quando puderem ser agrupados pelo mesmo identificador.
+## 6. Business Rules
+- Each product must have a unique identifier, name, category, price, description, image or placeholder, and stock.
+- Prices and totals should be calculated consistently, preferably using integer values in cents to avoid monetary inaccuracies.
+- The total should correspond to the subtotal plus shipping, considering the demonstrated rules.
+- The quantity of each item must be a positive integer.
+- Stock can never be exceeded by a valid operation.
+- A simulated purchase should reduce the demonstration stock and update the persisted data.
+- Changes in the cart should immediately update the interface.
+- Invalid data in localStorage must not prevent the entire application from working.
+- Confirmation messages should reflect the actual outcome of the operation.
+- Persisted data should be treated as untrusted and validated before use.
+- Do not simulate backend security: rules implemented only in the browser do not guarantee integrity against user manipulation.
 
-### 5.6 Frete
-- Disponibilizar campo para CEP.
-- Validar o formato do CEP.
-- Simular o cálculo do frete com regras locais claramente definidas.
-- Informar prazo estimado fictício.
-- Recalcular o total quando o frete for alterado.
-- Não afirmar que o prazo ou o valor representam uma cotação real.
+## 7. Code architecture and organization 
 
-### 5.7 Checkout e finalização da compra
-- Apresentar resumo dos produtos, quantidades, subtotal, frete e total.
-- Solicitar apenas os dados fictícios necessários para a demonstração.
-- Validar campos obrigatórios, formatos e dados inconsistentes.
-- Oferecer formas de pagamento apenas como opções simuladas.
-- Não solicitar nem armazenar número real de cartão, código de segurança ou senha bancária.
-- Apresentar uma etapa de revisão antes da confirmação.
-- Permitir concluir uma compra simulada.
-- Gerar um identificador de pedido demonstrativo.
-- Exibir confirmação de pedido com resumo da compra.
-- Não realizar cobranças nem integrações financeiras reais.
-- Não concluir uma compra com carrinho vazio ou estoque insuficiente.
+Even if everything is in a single HTML file, organize the code clearly. 
 
-### 5.8 Histórico de pedidos
-- Registrar pedidos fictícios no localStorage.
-- Exibir os pedidos simulados e seus itens.
-- Permitir consultar os detalhes de um pedido.
-- Tratar a ausência de histórico.
-- Evitar duplicação do mesmo pedido em decorrência de cliques repetidos na confirmação.
+Logically separate: 
+- Data and product catalog.
+- Current application state.
+- Persistence functions.
+- Interface rendering.
+- Search, filters, and sorting.
+- Cart operations.
+- Subtotal, shipping, and total calculations.
+- Form validation.
+- Checkout and order creation.
+- Messages and error handling.
 
-### 5.9 Feedback e tratamento de erros
-- Exibir mensagens de sucesso, atenção e erro.
-- Impedir ações inválidas.
-- Oferecer estados de carregamento quando fizer sentido.
-- Exibir mensagens compreensíveis em vez de erros técnicos diretamente ao usuário.
-- Tratar dados inválidos, armazenamento indisponível e ausência de produtos.
-- Solicitar confirmação para ações destrutivas.
+Use clear variable and function names, avoid code duplication, and keep business rules separate from visual handling whenever possible. 
 
-## 6. Regras de negócio
+Do not use eval or execute code coming from user input. Avoid inserting untrusted inputs directly through innerHTML. 
 
-- Cada produto deve possuir identificador único, nome, categoria, preço, descrição, imagem ou placeholder e estoque.
-- Preços e totais devem ser calculados de maneira consistente, preferencialmente utilizando valores inteiros em centavos para evitar imprecisões monetárias.
-- O total deverá corresponder ao subtotal mais o frete, considerando as regras demonstrativas.
-- A quantidade de cada item deve ser um número inteiro positivo.
-- O estoque nunca poderá ser ultrapassado por uma operação válida.
-- Uma compra simulada deverá reduzir o estoque da demonstração e atualizar os dados persistidos.
-- As alterações no carrinho devem atualizar imediatamente a interface.
-- Dados inválidos no localStorage não podem impedir a aplicação inteira de funcionar.
-- As mensagens de confirmação deverão refletir o resultado efetivo da operação.
-- Dados persistidos devem ser tratados como não confiáveis e validados antes do uso.
-- Não simule segurança de backend: regras implementadas apenas no navegador não garantem integridade contra manipulação pelo usuário.
+## 8. Responsiveness 
 
-## 7. Arquitetura e organização do código
-
-Embora tudo esteja em um único arquivo HTML, organize o código de forma clara.
-
-Separe logicamente:
-- Dados e catálogo de produtos.
-- Estado atual da aplicação.
-- Funções de persistência.
-- Renderização da interface.
-- Pesquisa, filtros e ordenação.
-- Operações do carrinho.
-- Cálculos de subtotal, frete e total.
-- Validação dos formulários.
-- Checkout e criação de pedidos.
-- Mensagens e tratamento de erros.
-
-Utilize nomes de variáveis e funções claros, evite duplicação de código e mantenha as regras de negócio separadas da manipulação visual sempre que possível.
-
-Não utilize eval ou execução de código proveniente de entradas do usuário. Evite inserir entradas não confiáveis diretamente por meio de innerHTML.
-
-## 8. Responsividade
-
-A aplicação deverá funcionar em:
+The application should work on: 
 - Desktop.
-- Notebook.
+- Laptop.
 - Tablet.
 - Smartphone.
 
-Utilize CSS responsivo e media queries.
+Use responsive CSS and media queries. 
 
-No mobile:
-- Ajuste a grade de produtos.
-- Evite rolagem horizontal desnecessária.
-- Mantenha botões e campos fáceis de utilizar por toque.
-- Adapte navegação, carrinho e checkout à largura da tela.
-- Garanta legibilidade e acessibilidade dos conteúdos.
+On mobile: 
+- Adjust the product grid.
+- Avoid unnecessary horizontal scrolling.
+- Keep buttons and fields easy to use by touch.
+- Adapt navigation, cart, and checkout to screen width.
+- Ensure content readability and accessibility.
 
-## 9. Restrições de escopo
+## 9. Scope restrictions 
 
-Não implemente:
-- Testes automatizados de qualquer natureza.
-- Frameworks de testes ou arquivos de configuração de testes.
-- Backend ou banco de dados remoto.
-- Autenticação real.
-- Pagamentos reais.
-- Integração obrigatória com serviços externos.
-- Coleta de dados pessoais desnecessários.
+Do not implement: 
+- Automated tests of any kind.
+- Testing frameworks or test configuration files.
+- Backend or remote database.
+- Real authentication.
+- Real payments.
+- Mandatory integration with external services.
+- Collection of unnecessary personal data.
 
-Não confunda uma compra simulada com uma transação comercial real.
+Do not confuse a simulated purchase with a real commercial transaction. 
 
-## 10. Entrega esperada
+## 10. Expected delivery 
 
-Entregue o conteúdo integral do arquivo index.html, incluindo HTML, CSS e JavaScript.
+Deliver the full content of the index.html file, including HTML, CSS, and JavaScript.
 
-O arquivo deverá poder ser salvo localmente e aberto em um navegador moderno.
+The file must be able to be saved locally and opened in a modern browser. 
 
-Antes de apresentar a entrega:
-- Revise a consistência entre as funcionalidades implementadas e os requisitos.
-- Verifique se todas as funcionalidades essenciais estão conectadas aos respectivos controles da interface.
-- Revise as regras de negócio e o tratamento de erros.
-- Confira a utilização do localStorage.
-- Confira o comportamento responsivo.
-- Remova referências a testes automatizados e dependências desnecessárias.
-- Não afirme que a aplicação foi executada ou validada em navegadores reais se isso não tiver ocorrido.
+Before presenting the delivery: 
+- Review the consistency between the implemented functionalities and the requirements.
+- Check if all essential functionalities are connected to their respective interface controls.
+- Review the business rules and error handling.
+- Check the use of localStorage.
+- Check the responsive behavior.
+- Remove references to automated tests and unnecessary dependencies.
+- Do not claim that the application has been run or validated in real browsers if that has not happened.
 
-Não crie nem execute testes automatizados. A validação funcional será realizada manualmente posteriormente.
+Do not create or run automated tests. Functional validation will be carried out manually later. 
 
-Apresente primeiro uma breve descrição da arquitetura e das limitações da solução. Em seguida, entregue o código completo do arquivo index.html.
+First, present a brief description of the architecture and limitations of the solution. Then, deliver the complete code of the index.html file. 
 
-Ao final, apresente uma lista de funcionalidades implementadas e instruções simples para abrir a aplicação localmente.
+Finally, provide a list of implemented functionalities and simple instructions to open the application locally.
