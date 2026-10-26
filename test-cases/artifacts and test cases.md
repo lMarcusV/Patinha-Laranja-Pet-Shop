@@ -82,3 +82,10 @@ A QA works preventively, they don't wait for the application to be ready to test
 | CT-035  | Check that data is combined | Data entered in the freight ZIP code field does not sync with the delivery field	| Critical |
 | CT-036  | Data entry fields | Change of data entry field according to payment method change | High |
 
+## 3. Conclusion
+
+Among the 36 test scenarios created, 21 defects were found, with 15 tests passing in their execution. 
+
+The application continues to be updated, with more records being created, more scenarios being developed, and new results being presented.
+
+This project was developed manually, with manual testing through exploratory tests, which shows that even with the advancement of artificial intelligence, the role of QA remains essential. AI can support testing activities, but the human perspective helps understand the context of use, question unexpected behaviors, and notice problems that were not anticipated in the requirements.
